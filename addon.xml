@@ -1,17 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.audio.dradio" name="dradio.de"
-	version="0.1.0" provider-name="escoand">
+<?xml version="1.0" encoding="UTF-8"?>
+<addon
+	id="plugin.audio.dradio"
+	name="dradio.de"
+	version="0.2.0"
+	provider-name="escoand">
 	<requires>
-		<import addon="xbmc.python" version="1.0" />
-		<import addon="script.module.simplejson" />
+		<import addon="xbmc.python" version="2.0" optional="false" />
 	</requires>
 	<extension point="xbmc.python.pluginsource" library="default.py">
 		<provides>audio</provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
+		<language>de</language>
+		<summary>dradio.de - Listening to the radio, whenever you want</summary>
+		<summary lang="de">dradio.de - Radio h&ouml;ren, wenn Sie Zeit haben</summary>
+		<description>German radio station</description>
+		<description lang="de">Deutscher Radio Sender</description>
 		<platform>all</platform>
-		<summary lang="en">dradio.de - Audio on demand.</summary>
-		<description lang="en">German radio station.</description>
 	</extension>
 </addon>
-
