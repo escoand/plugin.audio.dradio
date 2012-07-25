@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #  Copyright 2012 escoand
 #
 #  This file is part of the dradio.de xbmc plugin.
