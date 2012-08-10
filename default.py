@@ -186,6 +186,8 @@ def PLAYLIST():
 	listing = dom.getElementsByTagName('entries')[0]
 	items = listing.getElementsByTagName('item')
 	
+	totalItems = int(listing.getAttribute('to')) - int(listing.getAttribute('from'))
+	
 	# add items
 	for item in items:
 		url = item.getAttribute('url')
@@ -220,7 +222,7 @@ def PLAYLIST():
 			'date': date,
 			'duration': duration,
 			'title': name,
-		})
+		}, totalItems)
 	
 	# previous page
 	if int(listing.getAttribute('page')) > 0:
@@ -257,22 +259,22 @@ def getParam(name):
 	return None
 
 
-def addDir(name, image = None, params = {}):
+def addDir(name, image = None, params = {}, totalItems = 0):
 	name = name.encode('utf-8')
 	url = argv[0] + '?'
 	for key in params.keys():
 		if params[key] != None:
 			url = url + str(key) + '=' + str(params[key]) + '&'
 	item = ListItem(name, iconImage = image, thumbnailImage = image)
-	return addDirectoryItem(int(sys.argv[1]), url, item, True)
+	return addDirectoryItem(int(sys.argv[1]), url, item, True, totalItems)
 
 
-def addLink(name, url, image = None, info = {}):
+def addLink(name, url, image = None, info = {}, totalItems = 0):
 	name = name.encode('utf-8')
 	item = ListItem(name, iconImage = image, thumbnailImage = image)
 	item.setProperty('mimetype', 'audio/mpeg')
 	item.setInfo('music', info)
-	return addDirectoryItem(int(argv[1]), url, item)
+	return addDirectoryItem(int(argv[1]), url, item, False, totalItems)
 
 
 # get parameters
