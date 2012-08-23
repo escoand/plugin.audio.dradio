@@ -85,14 +85,14 @@ def INDEX():
 	})
 
 
-def SENDER():
+def STATION():
 	global mode, name, station, streams
 	
 	# add items
-	addDir('Suche', params = {
-		'mode': 10,
-		'station': station,
-	})
+	#addDir('Suche', params = {
+	#	'mode': 10,
+	#	'station': station,
+	#})
 	addDir('Tagesansicht', params = {
 		'mode': 20,
 		'station': station,
@@ -111,15 +111,14 @@ def SENDER():
 		})
 
 
-def SUCHE():
+def SEARCH():
 	pass
 
 
-def TAGESANSICHT():
+def DAILYVIEW():
 	global date, mode
 	
 	try:
-		endOfDirectory(int(argv[1]))
 		date = Dialog().numeric(1, u'Datum wählen').replace(' ', '')
 		date = strftime('%Y%m%d', strptime(date, '%d/%m/%Y'))
 		mode = 90
@@ -130,7 +129,7 @@ def TAGESANSICHT():
 		pass
 
 
-def SENDUNGEN():
+def PROGRAM():
 	global playlist, sendungen, station
 	
 	# parse content
@@ -149,7 +148,7 @@ def SENDUNGEN():
 		})
 
 
-def THEMEN():
+def TOPICS():
 	global playlist, station, themen
 	
 	# parse content
@@ -307,15 +306,15 @@ CONFIG()
 if mode == None:
 	INDEX()
 elif mode == 0:
-	SENDER()
+	STATION()
 elif mode == 10:
-	SUCHE()
+	SEARCH()
 elif mode == 20:
-	TAGESANSICHT()
+	DAILYVIEW()
 elif mode == 30:
-	SENDUNGEN()
+	PROGRAM()
 elif mode == 40:
-	THEMEN()
+	TOPICS()
 elif mode == 90:
 	PLAYLIST()
 
