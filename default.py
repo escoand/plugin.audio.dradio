@@ -24,15 +24,16 @@ from time import gmtime, strftime, strptime
 from urllib import quote_plus, urlopen
 from urlparse import parse_qs, urlparse
 from xml.dom.minidom import parseString
+from xbmc import translatePath
 from xbmcgui import Dialog, ListItem, lock, unlock
 from xbmcplugin import addDirectoryItem, endOfDirectory
 
 
 icons = {
-	0: 'special://profile/../addons/plugin.audio.dradio/icon.png',
-	1: 'special://profile/../addons/plugin.audio.dradio/dlf.png',
-	3: 'special://profile/../addons/plugin.audio.dradio/dkultur.png',
-	4: 'special://profile/../addons/plugin.audio.dradio/dwissen.png',
+	0: translatePath('special://profile/../addons/plugin.audio.dradio/icon.png'),
+	1: translatePath('special://profile/../addons/plugin.audio.dradio/dlf.png'),
+	3: translatePath('special://profile/../addons/plugin.audio.dradio/dkultur.png'),
+	4: translatePath('special://profile/../addons/plugin.audio.dradio/dwissen.png'),
 }
 
 
@@ -213,7 +214,7 @@ def PLAYLIST():
 				.getElementsByTagName('article')[0].getElementsByTagName('image')[0] \
 				.firstChild.data.replace('/90,0/', '/256,0/')
 		except:
-			image = None
+			image = ''
 		
 		addLink(name, url, image, {
 			'album': album,
@@ -258,7 +259,7 @@ def getParam(name):
 	return None
 
 
-def addDir(name, image = None, params = {}, totalItems = 0):
+def addDir(name, image = '', params = {}, totalItems = 0):
 	name = name.encode('utf-8')
 	url = argv[0] + '?'
 	for key in params.keys():
@@ -268,7 +269,7 @@ def addDir(name, image = None, params = {}, totalItems = 0):
 	return addDirectoryItem(int(sys.argv[1]), url, item, True, totalItems)
 
 
-def addLink(name, url, image = None, info = {}, totalItems = 0):
+def addLink(name, url, image = '', info = {}, totalItems = 0):
 	name = name.encode('utf-8')
 	item = ListItem(name, iconImage = image, thumbnailImage = image)
 	item.setProperty('mimetype', 'audio/mpeg')
