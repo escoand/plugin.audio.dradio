@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#  Copyright 2012 escoand
+#  Copyright 2013 escoand
 #
 #  This file is part of the dradio.de xbmc plugin.
 #
@@ -19,21 +19,24 @@
 #  along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from os.path import join
 from sys import argv
 from time import gmtime, strftime, strptime
 from urllib import quote_plus, urlopen
 from urlparse import parse_qs, urlparse
 from xml.dom.minidom import parseString
 from xbmc import translatePath
+import xbmcaddon
 from xbmcgui import Dialog, ListItem, lock, unlock
 from xbmcplugin import addDirectoryItem, endOfDirectory
 
+Addon = xbmcaddon.Addon("plugin.audio.dradio")
 
 icons = {
-	0: translatePath('special://profile/../addons/plugin.audio.dradio/icon.png'),
-	1: translatePath('special://profile/../addons/plugin.audio.dradio/dlf.png'),
-	3: translatePath('special://profile/../addons/plugin.audio.dradio/dkultur.png'),
-	4: translatePath('special://profile/../addons/plugin.audio.dradio/dwissen.png'),
+	0: join(Addon.getAddonInfo('path'), 'icon.png'),
+	1: join(Addon.getAddonInfo('path'), 'resources', 'media', 'dlf.png'),
+	3: join(Addon.getAddonInfo('path'), 'resources', 'media', 'dkultur.png'),
+	4: join(Addon.getAddonInfo('path'), 'resources', 'media', 'dwissen.png'),
 }
 
 
@@ -68,19 +71,19 @@ def INDEX():
 	global icons
 	
 	# add items
-	addDir('Alle Sender', icons[0], {
+	addDir(Addon.getLocalizedString(30001), icons[0], {
 		'mode': 0,
 		'station': 0,
 	})
-	addDir('Deutschlandfunk', icons[1], {
+	addDir(Addon.getLocalizedString(30002), icons[1], {
 		'mode': 0,
 		'station': 1,
 	})
-	addDir('Deutschlandradio Kultur', icons[3], {
+	addDir(Addon.getLocalizedString(30003), icons[3], {
 		'mode': 0,
 		'station': 3,
 	})
-	addDir('DRadio Wissen', icons[4], {
+	addDir(Addon.getLocalizedString(30004), icons[4], {
 		'mode': 0,
 		'station': 4,
 	})
@@ -90,25 +93,25 @@ def STATION():
 	global mode, name, station, streams
 	
 	# add items
-	#addDir('Suche', params = {
+	#addDir(Addon.getLocalizedString(30101), params = {
 	#	'mode': 10,
 	#	'station': station,
 	#})
-	addDir('Tagesansicht', params = {
+	addDir(Addon.getLocalizedString(30102), params = {
 		'mode': 20,
 		'station': station,
 	})
-	addDir('Sendungen', params = {
+	addDir(Addon.getLocalizedString(30103), params = {
 		'mode': 30,
 		'station': station,
 	})
-	addDir('Themen', params = {
+	addDir(Addon.getLocalizedString(30104), params = {
 		'mode': 40,
 		'station': station,
 	})
 	if station > 0:
-		addLink('Live-Stream', streams[station], icons[station], {
-			'title': 'Live-Stream',
+		addLink(Addon.getLocalizedString(30105), streams[station], icons[station], {
+			'title': Addon.getLocalizedString(30105),
 		})
 
 
@@ -120,7 +123,7 @@ def DAILYVIEW():
 	global date, mode
 	
 	try:
-		date = Dialog().numeric(1, u'Datum wählen').replace(' ', '')
+		date = Dialog().numeric(1, Addon.getLocalizedString(30201)).replace(' ', '')
 		date = strftime('%Y%m%d', strptime(date, '%d/%m/%Y'))
 		mode = 90
 	
@@ -226,7 +229,7 @@ def PLAYLIST():
 	
 	# previous page
 	if int(listing.getAttribute('page')) > 0:
-		addDir(u'zurück ...', params = {
+		addDir(Addon.getLocalizedString(30301), params = {
 			'mode': mode,
 			'station': station,
 			'page': int(page) - 1,
@@ -237,7 +240,7 @@ def PLAYLIST():
 	
 	# next page
 	if page + 1 < int(listing.getAttribute('pages')):
-		addDir('weiter ...', params = {
+		addDir(Addon.getLocalizedString(30302), params = {
 			'mode': mode,
 			'station': station,
 			'page': int(page) + 1,
