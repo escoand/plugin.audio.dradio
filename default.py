@@ -56,10 +56,10 @@ def CONFIG():
 	article = services.getElementsByTagName('urlArticleData')[0].getAttribute('value')
 	
 	# urls
-	sendungen = hosturl + baseurl + sendungen
-	themen = hosturl + baseurl + themen
-	playlist = hosturl + baseurl + playlist
-	article = hosturl + baseurl + article
+	sendungen = (hosturl + baseurl + sendungen).replace('//', '/').replace(':/', '://')
+	themen = (hosturl + baseurl + themen).replace('//', '/').replace(':/', '://')
+	playlist = (hosturl + baseurl + playlist).replace('//', '/').replace(':/', '://')
+	article = (hosturl + baseurl + article).replace('//', '/').replace(':/', '://')
 	streams = {
 		1: streams.getElementsByTagName('streamDLR')[0].getAttribute('value'),
 		3: streams.getElementsByTagName('streamDLF')[0].getAttribute('value'),
@@ -105,10 +105,10 @@ def STATION():
 		'mode': 30,
 		'station': station,
 	})
-	addDir(Addon.getLocalizedString(30104), params = {
-		'mode': 40,
-		'station': station,
-	})
+	#addDir(Addon.getLocalizedString(30104), params = {
+	#	'mode': 40,
+	#	'station': station,
+	#})
 	if station > 0:
 		addLink(Addon.getLocalizedString(30105), streams[station], icons[station], {
 			'title': Addon.getLocalizedString(30105),
@@ -124,7 +124,7 @@ def DAILYVIEW():
 	
 	try:
 		date = Dialog().numeric(1, Addon.getLocalizedString(30201)).replace(' ', '')
-		date = strftime('%Y%m%d', strptime(date, '%d/%m/%Y'))
+		date = strftime('%d.%m.%Y', strptime(date, '%d/%m/%Y'))
 		mode = 90
 	
 		PLAYLIST()
@@ -137,7 +137,7 @@ def PROGRAM():
 	global playlist, sendungen, station
 	
 	# parse content
-	dom = parseString(urlopen(sendungen + 'station=' + str(station)).read())
+	dom = parseString(urlopen(sendungen + '?drbm:station_id=' + str(station)).read())
 	listing = dom.getElementsByTagName('broadcastings')[0]
 	items = listing.getElementsByTagName('item')
 	
@@ -156,7 +156,7 @@ def TOPICS():
 	global playlist, station, themen
 	
 	# parse content
-	dom = parseString(urlopen(themen + str(station)).read())
+	dom = parseString(urlopen(themen + '?drbm:station_id=' + str(station)).read())
 	listing = dom.getElementsByTagName('themen')[0]
 	items = listing.getElementsByTagName('item')
 	
@@ -175,11 +175,11 @@ def PLAYLIST():
 	global article, broadcast, date, page, playlist, station, theme
 	
 	# generate url
-	url = playlist + '?station=' + str(station) + '&page=' + str(page)
+	url = playlist + '?drau:station_id=' + str(station) + '&drau:page=' + str(page)
 	if date != None:
-		url = url + '&date=' + str(date)
+		url = url + '&drau:from=' + str(date) + '&drau:to=' + str(date)
 	if broadcast != None:
-		url = url + '&broadcast=' + str(broadcast)
+		url = url + '&drau:broadcast_id=' + str(broadcast)
 	if theme != None:
 		url = url + '&theme=' + str(theme)
 	#print url
@@ -189,7 +189,7 @@ def PLAYLIST():
 	listing = dom.getElementsByTagName('entries')[0]
 	items = listing.getElementsByTagName('item')
 	
-	totalItems = int(listing.getAttribute('to')) - int(listing.getAttribute('from'))
+	totalItems = items.length
 	
 	# add items
 	for item in items:
@@ -213,9 +213,12 @@ def PLAYLIST():
 		except:
 			duration = None
 		try:
-			image = parseString(urlopen(article + '?id=' + id).read()) \
-				.getElementsByTagName('article')[0].getElementsByTagName('image')[0] \
-				.firstChild.data.replace('/90,0/', '/256,0/')
+			if id != None:
+				image = parseString(urlopen(article + '?dram:article_id=' + id).read()) \
+					.getElementsByTagName('article')[0].getElementsByTagName('image')[0] \
+					.firstChild.data #.replace('_max_100x75_', '_max_440x330_')
+			else:
+				image = ''
 		except:
 			image = ''
 		
@@ -228,7 +231,7 @@ def PLAYLIST():
 		}, totalItems)
 	
 	# previous page
-	if int(listing.getAttribute('page')) > 0:
+	if listing.getAttribute('page') and int(listing.getAttribute('page')) > 0:
 		addDir(Addon.getLocalizedString(30301), params = {
 			'mode': mode,
 			'station': station,

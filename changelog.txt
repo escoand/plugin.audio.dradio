@@ -1,0 +1,2 @@
+[B]1.3.0[/B]
+Fixed: Plugin broken due Site Relaunch
